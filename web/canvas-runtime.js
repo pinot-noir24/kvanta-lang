@@ -14,7 +14,6 @@
 
 import { CANVAS_W, CANVAS_H, deg2rad, toPx, tokenize, randomColorString } from './canvas-utils.js';
 
-const logEl      = document.getElementById('logs');
 const drawCanvas = document.getElementById('canvas');
 const drawCtx    = drawCanvas.getContext('2d', { alpha: false });
 
@@ -48,16 +47,21 @@ ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 // Public API
 // ---------------------------------------------------------------------------
 
+// Output callbacks — wired by main.js to feed the console panel.
+let onPrint = (msg) => console.log('Print: ' + msg);
+let onError = (msg) => console.warn('Runtime error: ' + msg);
+
 /**
- * Write a message to the on-page log element.
- * Non-string values are coerced with `String()`.
- *
- * @param {*} text - Message to display.
+ * Set the callback invoked when a `print` command is encountered.
+ * @param {(msg: string) => void} fn
  */
-export function log(text) {
-  if (typeof text !== 'string') text = String(text);
-  logEl.textContent = text;
-}
+export function setOnPrint(fn) { onPrint = fn; }
+
+/**
+ * Set the callback invoked when an `error` command is encountered.
+ * @param {(msg: string) => void} fn
+ */
+export function setOnError(fn) { onError = fn; }
 
 /**
  * Reset runtime state before executing a new script.
@@ -341,10 +345,10 @@ export function drawScript(script, should_draw_frame = false) {
         }
         case 'animate': { isAnimation = true; break; }
         case 'clear':   { clearCanvas(); break; }
-        case 'error':   { alert('Error: ' + raw); break; }
+        case 'error':   { onError(raw.slice(5).trim()); break; }
         case 'print': {
           const msg = raw.slice(5).trim();
-          console.log('Print:' + msg);
+          onPrint(msg);
           break;
         }
         default: /* ignore unknown commands */ break;

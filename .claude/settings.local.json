@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx vitest run tests/unit/main.test.js --reporter=verbose)",
+      "Bash(npx vitest run tests/unit/main.test.js tests/unit/drawing-commands.test.js --reporter=verbose)",
+      "Bash(npx vitest run tests/unit/ --reporter=verbose)",
+      "Bash(npx vitest run tests/unit/ --maxWorkers=2 --reporter=verbose)",
+      "Bash(npx vitest run tests/unit/ --maxWorkers=1 --reporter=verbose)",
+      "Bash(npx vitest run --reporter=verbose)",
+      "mcp__Claude_Preview__preview_start"
+    ]
+  }
+}
