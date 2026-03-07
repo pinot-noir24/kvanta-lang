@@ -23,8 +23,10 @@ html[data-theme="dark"],
   --accent-text:     #1e1e2e;
   --success:         #a6e3a1;
   --success-hover:   #94e2d5;
+  --success-text:    #11111b;
   --danger:          #f38ba8;
   --danger-hover:    #eba0ac;
+  --danger-text:     #11111b;
   --warning:         #f9e2af;
   --canvas-bg:       #11111b;
   --toolbar-bg:      rgba(24, 24, 37, 0.85);
@@ -50,8 +52,10 @@ html[data-theme="light"] {
   --accent-text:     #ffffff;
   --success:         #1a7f37;
   --success-hover:   #116329;
+  --success-text:    #ffffff;
   --danger:          #cf222e;
   --danger-hover:    #a40e26;
+  --danger-text:     #ffffff;
   --warning:         #9a6700;
   --canvas-bg:       #f0f0f0;
   --toolbar-bg:      rgba(246, 248, 250, 0.85);
@@ -183,7 +187,7 @@ body {
 /* Primary Run/Stop button */
 .btn--primary {
   background: var(--success);
-  color: #fff;
+  color: var(--success-text);
   border-radius: 999px;
   padding: 7px 20px;
   font-size: 13px;
@@ -197,6 +201,7 @@ body {
 
 .btn--primary[data-state="stop"] {
   background: var(--danger);
+  color: var(--danger-text);
   box-shadow: 0 2px 8px var(--glow-danger);
 }
 
@@ -267,7 +272,7 @@ body {
 
 .pane__header {
   position: absolute;
-  top: 8px;
+  top: 6px;
   right: 12px;
   z-index: 3;
   font-size: 11px;
@@ -329,6 +334,7 @@ body {
 /* CodeMirror fills the editor div */
 #editor .cm-editor {
   height: 100%;
+  padding-top: 18px; /* clear the floating Source label */
 }
 
 /* --------------------------------------------------------------------------
@@ -437,7 +443,7 @@ body {
   align-items: center;
   justify-content: center;
   overflow: auto;
-  padding: 8px;
+  padding: 18px 8px 8px;
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
