@@ -1,0 +1,558 @@
+/* ==========================================================================
+   Kvanta IDE — Styles
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Theme Palettes (CSS Custom Properties)
+   -------------------------------------------------------------------------- */
+
+html[data-theme="dark"],
+:root {
+  --bg:              #1e1e2e;
+  --panel:           #181825;
+  --panel-secondary: #1e1e2e;
+  --surface:         #313244;
+  --surface-hover:   #45475a;
+  --border:          #313244;
+  --border-focus:    #6c7086;
+  --text:            #cdd6f4;
+  --text-secondary:  #a6adc8;
+  --text-muted:      #6c7086;
+  --accent:          #89b4fa;
+  --accent-hover:    #74c7ec;
+  --accent-text:     #1e1e2e;
+  --success:         #a6e3a1;
+  --success-hover:   #94e2d5;
+  --success-text:    #11111b;
+  --danger:          #f38ba8;
+  --danger-hover:    #eba0ac;
+  --danger-text:     #11111b;
+  --warning:         #f9e2af;
+  --canvas-bg:       #11111b;
+  --toolbar-bg:      rgba(24, 24, 37, 0.85);
+  --scrollbar-thumb: #45475a;
+  --scrollbar-track: #181825;
+  --glow-success:    rgba(166, 227, 161, 0.2);
+  --glow-danger:     rgba(243, 139, 168, 0.2);
+}
+
+html[data-theme="light"] {
+  --bg:              #ffffff;
+  --panel:           #f6f8fa;
+  --panel-secondary: #ffffff;
+  --surface:         #f0f3f6;
+  --surface-hover:   #e1e4e8;
+  --border:          #d0d7de;
+  --border-focus:    #0969da;
+  --text:            #1f2328;
+  --text-secondary:  #656d76;
+  --text-muted:      #8b949e;
+  --accent:          #0969da;
+  --accent-hover:    #0550ae;
+  --accent-text:     #ffffff;
+  --success:         #1a7f37;
+  --success-hover:   #116329;
+  --success-text:    #ffffff;
+  --danger:          #cf222e;
+  --danger-hover:    #a40e26;
+  --danger-text:     #ffffff;
+  --warning:         #9a6700;
+  --canvas-bg:       #f0f0f0;
+  --toolbar-bg:      rgba(246, 248, 250, 0.85);
+  --scrollbar-thumb: #d0d7de;
+  --scrollbar-track: #f6f8fa;
+  --glow-success:    rgba(26, 127, 55, 0.15);
+  --glow-danger:     rgba(207, 34, 46, 0.15);
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset & Base
+   -------------------------------------------------------------------------- */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* --------------------------------------------------------------------------
+   3. Layout: App Shell
+   -------------------------------------------------------------------------- */
+
+.app {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   4. Toolbar
+   -------------------------------------------------------------------------- */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--toolbar-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+  z-index: 10;
+}
+
+.toolbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+}
+
+.toolbar__icon {
+  flex-shrink: 0;
+}
+
+.toolbar__title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.toolbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   5. Buttons
+   -------------------------------------------------------------------------- */
+
+.btn {
+  appearance: none;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.4;
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+              color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+  font-family: inherit;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Ghost buttons (secondary actions) */
+.btn--ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border-focus);
+}
+
+/* Primary Run/Stop button */
+.btn--primary {
+  background: var(--success);
+  color: var(--success-text);
+  border-radius: 999px;
+  padding: 7px 20px;
+  font-size: 13px;
+  box-shadow: 0 2px 8px var(--glow-success);
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--success-hover);
+  box-shadow: 0 4px 14px var(--glow-success);
+}
+
+.btn--primary[data-state="stop"] {
+  background: var(--danger);
+  color: var(--danger-text);
+  box-shadow: 0 2px 8px var(--glow-danger);
+}
+
+.btn--primary[data-state="stop"]:hover:not(:disabled) {
+  background: var(--danger-hover);
+  box-shadow: 0 4px 14px var(--glow-danger);
+}
+
+/* Icon-only button (theme toggle) */
+.btn--icon {
+  background: transparent;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.btn--icon:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.btn--icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Tiny button (console clear) */
+.btn--tiny {
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11px;
+  padding: 2px 8px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.btn--tiny:hover {
+  color: var(--text-secondary);
+  border-color: var(--border);
+}
+
+/* --------------------------------------------------------------------------
+   6. Panes
+   -------------------------------------------------------------------------- */
+
+.panes {
+  display: grid;
+  grid-template-columns: 1fr 4px 1fr;
+  flex: 1;
+  min-height: 0;
+}
+
+.pane {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.pane__header {
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  z-index: 3;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  background: var(--panel);
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  user-select: none;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+/* --------------------------------------------------------------------------
+   7. Resizers
+   -------------------------------------------------------------------------- */
+
+.resizer {
+  background: var(--border);
+  transition: background-color 0.15s ease;
+  z-index: 2;
+}
+
+.resizer:hover {
+  background: var(--accent);
+}
+
+.resizer--horizontal {
+  cursor: col-resize;
+  width: 4px;
+  height: 100%;
+}
+
+.resizer--vertical {
+  cursor: row-resize;
+  width: 100%;
+  height: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   8. Editor Pane (vertical split: editor + console)
+   -------------------------------------------------------------------------- */
+
+.editor-pane {
+  display: grid;
+  grid-template-rows: 1fr 4px 200px;
+  height: 100%;
+  overflow: hidden;
+}
+
+#editor {
+  position: relative;
+  overflow: auto;
+  min-height: 0;
+}
+
+/* CodeMirror fills the editor div */
+#editor .cm-editor {
+  height: 100%;
+  padding-top: 18px; /* clear the floating Source label */
+}
+
+/* --------------------------------------------------------------------------
+   9. Console Panel
+   -------------------------------------------------------------------------- */
+
+.console-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--panel);
+  transition: background-color 0.25s ease;
+  overflow: hidden;
+}
+
+.console-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  user-select: none;
+  flex-shrink: 0;
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.console-panel__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  min-height: 0;
+}
+
+.console-msg {
+  padding: 1px 0;
+  word-break: break-word;
+}
+
+.console-msg--print {
+  color: var(--text);
+}
+
+.console-msg--error {
+  color: var(--danger);
+}
+
+.console-msg--warn {
+  color: var(--warning);
+}
+
+.console-msg__prefix {
+  font-weight: 700;
+}
+
+.console-panel__input-wrap {
+  border-top: 1px solid var(--border);
+  padding: 4px 8px;
+  flex-shrink: 0;
+  transition: border-color 0.25s ease;
+}
+
+.console-panel__input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  padding: 4px 8px;
+  outline: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.console-panel__input:focus {
+  border-color: var(--accent);
+}
+
+.console-panel__input:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.console-panel__input::placeholder {
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   10. Canvas Pane
+   -------------------------------------------------------------------------- */
+
+.resultWrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  padding: 18px 8px 8px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  background: var(--canvas-bg);
+  transition: background-color 0.25s ease;
+}
+
+.canvasContainer {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  max-width: 1000px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding: 2px;
+}
+
+.canvas {
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1 / 1;
+  background: #0a0f1f;
+  display: block;
+  overflow: hidden;
+  object-fit: contain;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  transition: border-color 0.25s ease;
+}
+
+/* --------------------------------------------------------------------------
+   11. CodeMirror Overrides
+   -------------------------------------------------------------------------- */
+
+.cm-error {
+  text-decoration: underline wavy;
+  text-decoration-color: var(--danger);
+}
+
+.cm-error-msg {
+  color: var(--danger);
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   12. Scrollbars
+   -------------------------------------------------------------------------- */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--surface-hover);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* --------------------------------------------------------------------------
+   13. Responsive
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .panes {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .resizer--horizontal {
+    display: none;
+  }
+
+  .pane {
+    min-width: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pane:last-child {
+    border-bottom: none;
+  }
+
+  .editor-pane {
+    grid-template-rows: 1fr 4px 160px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   14. Utility
+   -------------------------------------------------------------------------- */
+
+/* Hidden file input */
+#fileInput {
+  display: none;
+}

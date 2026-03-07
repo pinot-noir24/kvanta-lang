@@ -5,7 +5,7 @@
  * in tests/setup.js which runs before any module is imported.
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { drawScript, cancelNow } from '../../web/canvas-runtime.js';
+import { drawScript, cancelNow, setOnPrint, setOnError } from '../../web/canvas-runtime.js';
 
 const ctx = globalThis.__mockCtx;
 
@@ -301,11 +301,13 @@ describe('drawScript – rectangle coordinates', () => {
 // print
 // ---------------------------------------------------------------------------
 describe('drawScript – print', () => {
-  it('logs the message to the console', () => {
-    const spy = vi.spyOn(console, 'log').mockImplementation(() => {});
+  it('calls the onPrint callback with the message', () => {
+    const handler = vi.fn();
+    setOnPrint(handler);
     drawScript(['print hello world']);
-    expect(spy).toHaveBeenCalledWith('Print:hello world');
-    spy.mockRestore();
+    expect(handler).toHaveBeenCalledWith('hello world');
+    // Restore default
+    setOnPrint((msg) => console.log('Print: ' + msg));
   });
 
   it('does not throw', () => {
@@ -317,11 +319,13 @@ describe('drawScript – print', () => {
 // error
 // ---------------------------------------------------------------------------
 describe('drawScript – error', () => {
-  it('calls window.alert with the error message', () => {
-    const spy = vi.spyOn(window, 'alert').mockImplementation(() => {});
+  it('calls the onError callback with the error message', () => {
+    const handler = vi.fn();
+    setOnError(handler);
     drawScript(['error something went wrong']);
-    expect(spy).toHaveBeenCalled();
-    spy.mockRestore();
+    expect(handler).toHaveBeenCalledWith('something went wrong');
+    // Restore default
+    setOnError((msg) => console.warn('Runtime error: ' + msg));
   });
 });
 

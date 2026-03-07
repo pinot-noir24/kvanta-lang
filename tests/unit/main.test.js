@@ -23,7 +23,11 @@ vi.mock('../../quanta-lang/pkg/quanta_lang.js', () => {
     execute: vi.fn(),
     execute_key: vi.fn(),
     execute_mouse: vi.fn(),
-    get_commands: vi.fn(() => []),
+    get_commands: vi.fn(() => [{
+      get_commands: () => [],
+      get_status: () => 2, // 2 = End → terminates the doRun while-loop
+      sleep_for: 0,
+    }]),
     get_runtime_error: vi.fn(),
   };
   return {
@@ -46,7 +50,30 @@ vi.mock('../../web/canvas-runtime.js', () => ({
   checkIsCancelled: vi.fn(() => false),
   cancelNow: vi.fn(),
   setIsSafari: vi.fn(),
+  setOnPrint: vi.fn(),
+  setOnError: vi.fn(),
 }));
+
+vi.mock('../../web/console-panel.js', () => ({
+  initConsole: vi.fn(),
+  consolePrint: vi.fn(),
+  consoleError: vi.fn(),
+  consoleWarn: vi.fn(),
+  clearConsole: vi.fn(),
+  enableInput: vi.fn(),
+  disableInput: vi.fn(),
+}));
+
+vi.mock('../../web/theme.js', () => ({
+  initTheme: vi.fn(),
+  toggleTheme: vi.fn(),
+  getTheme: vi.fn(() => 'dark'),
+}));
+
+vi.mock('../../web/styles.css', () => ({}));
+
+vi.mock('../../web/themes/dark-editor', () => ({ darkEditorTheme: [] }));
+vi.mock('../../web/themes/light-editor', () => ({ lightEditorTheme: [] }));
 
 // ---------------------------------------------------------------------------
 // Imports (after mocks are registered)
@@ -64,6 +91,7 @@ import {
 } from '../../web/main.js';
 
 import { setup, cancelNow } from '../../web/canvas-runtime.js';
+import { consoleError } from '../../web/console-panel.js';
 
 // ============================================================
 // sleep
@@ -186,8 +214,6 @@ describe('downloadFile', () => {
 // ============================================================
 
 describe('alertError', () => {
-  let logSpy, alertSpy;
-
   const makeErr = (msg = 'bad token', sr = 2, sc = 4, er = 2, ec = 9) => ({
     start_row: sr,
     start_column: sc,
@@ -197,52 +223,34 @@ describe('alertError', () => {
   });
 
   beforeEach(() => {
-    logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-    alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
+    consoleError.mockClear();
   });
 
-  afterEach(() => {
-    logSpy.mockRestore();
-    alertSpy.mockRestore();
-  });
-
-  it('calls console.log once', () => {
+  it('calls consoleError once', () => {
     alertError(makeErr());
-    expect(logSpy).toHaveBeenCalledOnce();
+    expect(consoleError).toHaveBeenCalledOnce();
   });
 
-  it('includes the error message in the console output', () => {
+  it('includes the error message in the output', () => {
     alertError(makeErr('undefined variable'));
-    expect(logSpy).toHaveBeenCalledWith(
+    expect(consoleError).toHaveBeenCalledWith(
       expect.stringContaining('undefined variable'),
     );
   });
 
-  it('includes row and column in the console output', () => {
+  it('includes row and column in the output', () => {
     alertError(makeErr('x', 3, 7, 3, 12));
-    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('3:7'));
+    expect(consoleError).toHaveBeenCalledWith(expect.stringContaining('3:7'));
   });
 
-  it('calls window.alert once', () => {
-    alertError(makeErr());
-    expect(alertSpy).toHaveBeenCalledOnce();
-  });
-
-  it('includes the error message in the alert', () => {
-    alertError(makeErr('syntax error'));
-    expect(alertSpy).toHaveBeenCalledWith(
-      expect.stringContaining('syntax error'),
-    );
-  });
-
-  it('includes the start row:column in the alert', () => {
+  it('includes the start row:column', () => {
     alertError(makeErr('e', 5, 12, 5, 15));
-    expect(alertSpy).toHaveBeenCalledWith(expect.stringContaining('5:12'));
+    expect(consoleError).toHaveBeenCalledWith(expect.stringContaining('5:12'));
   });
 
-  it('includes the end row:column in the alert', () => {
+  it('includes the end row:column', () => {
     alertError(makeErr('e', 1, 0, 1, 4));
-    expect(alertSpy).toHaveBeenCalledWith(expect.stringContaining('1:4'));
+    expect(consoleError).toHaveBeenCalledWith(expect.stringContaining('1:4'));
   });
 });
 
